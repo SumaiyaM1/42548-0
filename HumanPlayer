@@ -1,0 +1,45 @@
+package SOSGame;
+
+import java.util.Scanner;
+
+public class HumanPlayer extends Player {
+    // Scanner to get user input
+    private Scanner scanner = new Scanner(System.in);
+
+    // Constructor for HumanPlayer, initializes player's color
+    public HumanPlayer(String color) {
+        super(color);
+    }
+
+    // Override the makeMove method for human player's input
+    @Override
+    public void makeMove(String[][] board) {
+        // Ask the player for the row number
+        System.out.print("Enter row (0-4): ");
+        int row = scanner.nextInt();
+        
+        // Ask the player for the column number
+        System.out.print("Enter column (0-4): ");
+        int col = scanner.nextInt();
+        
+        // Ask the player to choose between 'S' or 'O'
+        System.out.print("Enter 'S' or 'O': ");
+        String value = scanner.next().toUpperCase(); // Convert input to uppercase
+
+        // Validate the input and check if the cell is empty
+        if (value.equals("S") || value.equals("O")) {
+            if (row >= 0 && row < board.length && col >= 0 && col < board[0].length && board[row][col].equals(" ")) {
+                board[row][col] = value;  // Place the letter on the board
+            } else {
+                // Invalid move, prompt user to try again
+                System.out.println("Invalid move. Try again.");
+                makeMove(board); // Retry move
+            }
+        } else {
+            // Invalid input, prompt user to try again
+            System.out.println("Invalid input. Please enter 'S' or 'O'.");
+            makeMove(board); // Retry move
+        }
+    }
+}
+
