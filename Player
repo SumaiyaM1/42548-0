@@ -1,0 +1,11 @@
+package SOSGame;
+
+public abstract class Player {
+    protected String color;
+
+    public Player(String color) {
+        this.color = color;
+    }
+
+    public abstract void makeMove(String[][] board);
+}
