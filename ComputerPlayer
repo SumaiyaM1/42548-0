@@ -1,0 +1,33 @@
+package SOSGame;
+
+import java.util.Random;
+
+public class ComputerPlayer extends Player {
+    // Create an instance of Random to generate random moves
+    private Random random = new Random();
+
+    // Constructor for ComputerPlayer that takes the player's color as an argument
+    public ComputerPlayer(String color) {
+        super(color);  // Call the parent class constructor to set the color
+    }
+
+    // Override the makeMove method for the computer player's turn
+    @Override
+    public void makeMove(String[][] board) {
+        int row, col;
+        
+        // Randomly select an empty position on the board
+        do {
+            row = random.nextInt(board.length);  // Get a random row
+            col = random.nextInt(board[0].length);  // Get a random column
+        } while (!board[row][col].equals(" "));  // Ensure the selected cell is empty
+
+        // Randomly decide whether to place "S" or "O" in the selected position
+        String value = random.nextBoolean() ? "S" : "O";
+        board[row][col] = value;  // Place the chosen letter on the board
+
+        // Print out the move made by the computer player
+        System.out.println("Computer (" + color + ") placed " + value + " at (" + row + ", " + col + ")");
+    }
+}
+
