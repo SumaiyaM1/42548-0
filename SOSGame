@@ -29,4 +29,134 @@ public class SOSGame {
             if (index != -1) {
                 markSOS("horizontal", i, index); // Mark SOS on color board
                 System.out.println("Found horizontal SOS");
-                foundSOS =
+                foundSOS = true; // SOS found
+            }
+        }
+
+        // Check for vertical SOS sequences
+        for (int col = 0; col < SIZE; col++) {
+            StringBuilder s = new StringBuilder();
+            for (int row = 0; row < SIZE; row++) {
+                s.append(board[row][col]); // Build the column as a string
+            }
+            int index = s.indexOf("SOS");
+            if (index != -1) {
+                markSOS("vertical", index, col);
+                System.out.println("Found vertical SOS");
+                foundSOS = true;
+            }
+        }
+
+        // Check for diagonal SOS sequences
+        for (int offset = 0; offset <= SIZE - 3; offset++) {
+            for (int i = 0; i <= SIZE - 3 - offset; i++) {
+                StringBuilder s1 = new StringBuilder(); // For one diagonal direction
+                StringBuilder s2 = new StringBuilder(); // For the opposite diagonal direction
+
+                for (int j = 0; j < Math.min(SIZE - i, SIZE - i - offset); j++) {
+                    s1.append(board[i + j][i + j + offset]); // Top-left to bottom-right diagonal
+                }
+
+                for (int j = 0; j < Math.min(SIZE - i - offset, SIZE - i); j++) {
+                    s2.append(board[i + j + offset][i + j]); // Bottom-left to top-right diagonal
+                }
+
+                int index1 = s1.indexOf("SOS");
+                int index2 = s2.indexOf("SOS");
+
+                if (index1 != -1) {
+                    markSOS("diagonal", i, offset);
+                    System.out.println("Found diagonal SOS");
+                    foundSOS = true;
+                }
+
+                if (index2 != -1) {
+                    markSOS("diagonal", i, offset);
+                    System.out.println("Found diagonal SOS");
+                    foundSOS = true;
+                }
+            }
+        }
+
+        return foundSOS; // Return whether SOS was found
+    }
+
+    // Mark the SOS sequence on the color board
+    public static void markSOS(String direction, int row, int col) {
+        String markColor = "B"; // Default to blue, can alternate based on player
+
+        // Mark horizontal SOS
+        if (direction.equals("horizontal")) {
+            for (int i = col; i < col + 3; i++) {
+                colorBoard[row][i] = markColor; // Mark cells with the player's color
+            }
+        }
+        // Mark vertical SOS
+        else if (direction.equals("vertical")) {
+            for (int i = row; i < row + 3; i++) {
+                colorBoard[i][col] = markColor;
+            }
+        }
+        // Mark diagonal SOS
+        else if (direction.equals("diagonal")) {
+            for (int i = 0; i < 3; i++) {
+                colorBoard[row + i][col + i] = markColor;
+            }
+        }
+    }
+
+    // Print the game board and color-coded SOS sequences
+    public static void printBoard() {
+        System.out.print("  ");
+        for (int i = 0; i < SIZE; i++) {
+            System.out.print(" " + i + " "); // Print column numbers
+        }
+        System.out.println();
+
+        // Print the board with cell divisions
+        System.out.println(" +---".repeat(SIZE) + "+");
+
+        for (int i = 0; i < SIZE; i++) {
+            System.out.print(i + "|"); // Print row numbers
+            for (int j = 0; j < SIZE; j++) {
+                char cellColor = colorBoard[i][j].charAt(0); // Get color of the cell
+                if (cellColor == 'B') {
+                    System.out.print(" \033[34m" + board[i][j] + "\033[0m |"); // Blue for SOS
+                } else if (cellColor == 'R') {
+                    System.out.print(" \033[31m" + board[i][j] + "\033[0m |"); // Red for SOS
+                } else {
+                    System.out.print(" " + board[i][j] + " |"); // Normal cell
+                }
+            }
+            System.out.println();
+            System.out.println(" +---".repeat(SIZE) + "+");
+        }
+    }
+
+    // Main game loop
+    public static void main(String[] args) {
+        initializeBoard(); // Set up the board
+
+        Player bluePlayer = new HumanPlayer("blue"); // Create blue player
+        Player redPlayer = new ComputerPlayer("red"); // Create red player
+
+        boolean gameWon = false;
+        Player currentPlayer = bluePlayer; // Start with blue player
+
+        while (!gameWon) {
+            printBoard(); // Display the board
+
+            System.out.println("Player (" + currentPlayer.color + ") turn.");
+            currentPlayer.makeMove(board); // Current player makes a move
+
+            gameWon = checkSOS(); // Check for SOS
+            if (gameWon) {
+                System.out.println("Congratulations to the " + currentPlayer.color + " player! You've won the game by creating an SOS!");
+            }
+
+            // Switch players after each turn
+            currentPlayer = (currentPlayer == bluePlayer) ? redPlayer : bluePlayer;
+        }
+    }
+}
+
