@@ -1,0 +1,61 @@
+package SOS;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class SOSGameTest {
+
+    @BeforeEach
+    public void setUp() {
+        SOSGame.initializeBoard();
+    }
+
+    @Test
+    public void testBoardInitialization() {
+        for (int i = 0; i < SOSGame.SIZE; i++) {
+            for (int j = 0; j < SOSGame.SIZE; j++) {
+                assertEquals(" ", SOSGame.board[i][j]);
+            }
+        }
+    }
+
+    @Test
+    public void testMakeMove() {
+        SOSGame.makeMove(0, 0, "S");
+        assertEquals("S", SOSGame.board[0][0]);
+    }
+
+    @Test
+    public void testHorizontalSOSDetection() {
+        SOSGame.board[1][1] = "S";
+        SOSGame.board[1][2] = "O";
+        SOSGame.board[1][3] = "S";
+        assertTrue(SOSGame.checkSOS());
+    }
+
+    @Test
+    public void testVerticalSOSDetection() {
+        SOSGame.board[0][1] = "S";
+        SOSGame.board[1][1] = "O";
+        SOSGame.board[2][1] = "S";
+        assertTrue(SOSGame.checkSOS());
+    }
+
+    @Test
+    public void testDiagonalSOSDetection() {
+        SOSGame.board[0][0] = "S";
+        SOSGame.board[1][1] = "O";
+        SOSGame.board[2][2] = "S";
+        assertTrue(SOSGame.checkSOS());
+    }
+
+    @Test
+    public void testNoSOS() {
+        SOSGame.board[0][0] = "S";
+        SOSGame.board[0][1] = "S";
+        SOSGame.board[0][2] = "S";
+        assertFalse(SOSGame.checkSOS());
+    }
+}
+
