@@ -1,0 +1,32 @@
+package SOSGame;
+
+public class SOSGame {
+    private static final int SIZE = 5; // Board size
+    private static String[][] board = new String[SIZE][SIZE]; // Main game board
+    private static String[][] colorBoard = new String[SIZE][SIZE]; // To track colors of SOS sequences
+
+    // Initialize the game board and color board with empty spaces
+    public static void initializeBoard() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                board[i][j] = " "; // Empty cell
+                colorBoard[i][j] = " "; // Empty color cell
+            }
+        }
+    }
+
+    // Check if any SOS sequences are formed
+    public static boolean checkSOS() {
+        boolean foundSOS = false;
+
+        // Check for horizontal SOS sequences
+        for (int i = 0; i < SIZE; i++) {
+            StringBuilder s = new StringBuilder();
+            for (int j = 0; j < SIZE; j++) {
+                s.append(board[i][j]); // Build the row as a string
+            }
+            int index = s.indexOf("SOS"); // Look for "SOS"
+            if (index != -1) {
+                markSOS("horizontal", i, index); // Mark SOS on color board
+                System.out.println("Found horizontal SOS");
+                foundSOS =
